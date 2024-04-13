@@ -1,0 +1,46 @@
+<tui-scrollbar>
+    <table tuiTable [columns]="columns">
+        <thead>
+            <tr tuiThGroup>
+                <th *tuiHead="'fileName'" tuiTh>Filename</th>
+                <th *tuiHead="'sendDate'" tuiTh>Send Date</th>
+                <th *tuiHead="'uploadDate'" tuiTh>Upload Date</th>
+                <th *tuiHead="'to'" tuiTh>To</th>
+                <th *tuiHead="'cc'" tuiTh>CC</th>
+                <th *tuiHead="'from'" tuiTh>From</th>
+                <th *tuiHead="'subject'" tuiTh>Subject</th>
+            </tr>
+        </thead>
+
+        <tbody *ngIf="items" tuiTbody [data]="items">
+            <tr *ngFor="let file of items" tuiTr>
+                <td *tuiCell="'fileName'" tuiTd>{{ file.fileName }}</td>
+
+                <td *tuiCell="'sendDate'" tuiTd>
+                    {{ file.sendDate | date : "dd-MM-YYYY" }}
+                </td>
+
+                <td *tuiCell="'uploadDate'" tuiTd>
+                    {{ file.uploadDate | date : "dd-MM-YYYY" }}
+                </td>
+
+                <td *tuiCell="'to'" tuiTd>
+                    {{ file.to | joinPipe }}
+                </td>
+
+                <td *tuiCell="'cc'" tuiTd>
+                    <tui-line-clamp [content]="file.cc | joinPipe" [linesLimit]="1">
+                    </tui-line-clamp>
+                </td>
+
+                <td *tuiCell="'from'" tuiTd>
+                    {{ file.from | joinPipe }}
+                </td>
+
+                <td *tuiCell="'subject'" tuiTd>
+                    {{ file.subject }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</tui-scrollbar>
