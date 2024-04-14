@@ -7,4 +7,7 @@ export interface EmlFile {
     cc: string[];
     from: string[];
     subject: string;
+
+    isDanger: boolean;
+    dangerValues: string[];
 }

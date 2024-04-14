@@ -12,14 +12,12 @@ export const routes: Routes = [
     },
     {
         path: AppPaths.SCAN,
-        loadComponent: async () =>
-            import('./modules/scan/scan.component').then(
-                (c) => c.ScanComponent
-            ),
+        loadChildren: async () =>
+            import('./modules/scan/scan.routing').then((r) => r.routes),
     },
     {
         path: AppPaths.EMPTY,
         pathMatch: 'full',
-        redirectTo: AppPaths.UPLOAD,
+        redirectTo: AppPaths.SCAN,
     },
 ];

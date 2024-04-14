@@ -4,12 +4,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TuiFileLike, TuiInputFilesModule } from '@taiga-ui/kit';
 import {
     BehaviorSubject,
+    combineLatest,
     filter,
     map,
-    mergeMap,
     Observable,
+    startWith,
+    switchMap,
     tap,
-    zip,
 } from 'rxjs';
 
 import { FileUploaderService } from './services/file-uploader.service';
@@ -35,10 +36,11 @@ export class FileUploaderComponent {
         this.control.valueChanges.pipe(
             filter((files) => !!files?.length),
             tap((files) => this.uploadingFiles$.next(files!)),
-            mergeMap((files) => {
-                return zip(
-                    ...files!.map((file) => {
+            switchMap((files) =>
+                combineLatest(
+                    files!.map((file) => {
                         return this.fileUploaderService.uploadEmail$(file).pipe(
+                            startWith(null),
                             tap(() =>
                                 this.uploadingFiles$.next(
                                     this.uploadingFiles$.value.filter(
@@ -49,7 +51,7 @@ export class FileUploaderComponent {
                             map(() => file)
                         );
                     })
-                );
-            })
+                )
+            )
         );
 }

@@ -4,4 +4,6 @@ import { WithSortRequest } from '../../../../shared/types/request/with-sort-requ
 
 export interface ListEmlFilesRequest
     extends WithPaginationRequest,
-        WithSortRequest<EmlFile> {}
+        WithSortRequest<EmlFile> {
+    regExps: string[];
+}

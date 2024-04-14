@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AppPaths } from '../enums/app-paths.enum';
-import {A} from "@angular/cdk/keycodes";
 
 @Injectable()
 export class NavigationService {
@@ -21,6 +20,23 @@ export class NavigationService {
     }
 
     toScan(): void {
-        this.router.navigate(['/', AppPaths.EMAIL_ANALYZER, AppPaths.SCAN]);
+        void this.router.navigate([
+            '/',
+            AppPaths.EMAIL_ANALYZER,
+            AppPaths.SCAN,
+        ]);
+    }
+
+    toDetails(fileId: string, regExps?: string[]): void {
+        void this.router.navigate(
+            [
+                '/',
+                AppPaths.EMAIL_ANALYZER,
+                AppPaths.SCAN,
+                AppPaths.FILE,
+                fileId,
+            ],
+            { queryParams: regExps ? { regExps } : undefined }
+        );
     }
 }

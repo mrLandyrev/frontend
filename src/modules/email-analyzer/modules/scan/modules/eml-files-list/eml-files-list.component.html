@@ -1,46 +1,118 @@
-<tui-scrollbar>
-    <table tuiTable [columns]="columns">
-        <thead>
-            <tr tuiThGroup>
-                <th *tuiHead="'fileName'" tuiTh>Filename</th>
-                <th *tuiHead="'sendDate'" tuiTh>Send Date</th>
-                <th *tuiHead="'uploadDate'" tuiTh>Upload Date</th>
-                <th *tuiHead="'to'" tuiTh>To</th>
-                <th *tuiHead="'cc'" tuiTh>CC</th>
-                <th *tuiHead="'from'" tuiTh>From</th>
-                <th *tuiHead="'subject'" tuiTh>Subject</th>
-            </tr>
-        </thead>
+<tui-table-pagination
+    class="tui-space_bottom-2"
+    [total]="(this.totalItems$ | async) || 0"
+    [size]="20"
+    (paginationChange)="onPaginationChange($event)"
+>
+</tui-table-pagination>
 
-        <tbody *ngIf="items" tuiTbody [data]="items">
-            <tr *ngFor="let file of items" tuiTr>
-                <td *tuiCell="'fileName'" tuiTd>{{ file.fileName }}</td>
+<tui-loader
+    [showLoader]="!items || !!(this.isFilesLoading$ | async)"
+    [overlay]="true"
+>
+    <tui-scrollbar>
+        <table
+            class="tui-table tui-table_layout_fixed"
+            tuiTable
+            [columns]="columns"
+            [direction]="(direction$ | async) || 1"
+            [tuiSortBy]="sorter$ | async"
+            (directionChange)="direction$.next($event)"
+            (tuiSortByChange)="sorter$.next($any($event)!)"
+        >
+            <thead>
+                <tr class="tui-table__tr table__tr_border_none" tuiThGroup>
+                    <th *tuiHead="'subject'" tuiTh tuiSortable>Subject</th>
+                    <th *tuiHead="'fileName'" tuiTh tuiSortable>Filename</th>
+                    <th *tuiHead="'sendDate'" tuiTh tuiSortable>Send Date</th>
+                    <th *tuiHead="'uploadDate'" tuiTh tuiSortable>
+                        Upload Date
+                    </th>
+                    <th *tuiHead="'to'" tuiTh tuiSortable>To</th>
+                    <th *tuiHead="'cc'" tuiTh tuiSortable>CC</th>
+                    <th *tuiHead="'from'" tuiTh tuiSortable>From</th>
+                </tr>
+            </thead>
 
-                <td *tuiCell="'sendDate'" tuiTd>
-                    {{ file.sendDate | date : "dd-MM-YYYY" }}
-                </td>
+            <tbody *ngIf="items" tuiTbody [data]="items">
+                <tr
+                    *ngFor="let file of items; trackBy: idIdentity"
+                    tuiTr
+                    class="file tui-table__tr table__tr_border_none"
+                    [class.file--danger]="file.isDanger"
+                    (click)="showFileDangerValues(file)"
+                >
+                    <td
+                        *tuiCell="'subject'"
+                        class="tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        <tui-line-clamp
+                            [content]="file.subject"
+                            [linesLimit]="1"
+                        ></tui-line-clamp>
+                    </td>
 
-                <td *tuiCell="'uploadDate'" tuiTd>
-                    {{ file.uploadDate | date : "dd-MM-YYYY" }}
-                </td>
+                    <td
+                        *tuiCell="'fileName'"
+                        class="tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        <tui-line-clamp
+                            [content]="file.fileName"
+                            [linesLimit]="1"
+                        ></tui-line-clamp>
+                    </td>
 
-                <td *tuiCell="'to'" tuiTd>
-                    {{ file.to | joinPipe }}
-                </td>
+                    <td
+                        *tuiCell="'sendDate'"
+                        class="no-wrap tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        {{ file.sendDate | date : "dd.MM.YYYY HH:mm:ss" }}
+                    </td>
 
-                <td *tuiCell="'cc'" tuiTd>
-                    <tui-line-clamp [content]="file.cc | joinPipe" [linesLimit]="1">
-                    </tui-line-clamp>
-                </td>
+                    <td
+                        *tuiCell="'uploadDate'"
+                        class="no-wrap tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        {{ file.uploadDate | date : "dd.MM.YYYY HH:mm:ss" }}
+                    </td>
 
-                <td *tuiCell="'from'" tuiTd>
-                    {{ file.from | joinPipe }}
-                </td>
+                    <td
+                        *tuiCell="'to'"
+                        class="tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        <tui-line-clamp
+                            [content]="file.to | joinPipe"
+                            [linesLimit]="1"
+                        ></tui-line-clamp>
+                    </td>
 
-                <td *tuiCell="'subject'" tuiTd>
-                    {{ file.subject }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</tui-scrollbar>
+                    <td
+                        *tuiCell="'cc'"
+                        class="tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        <tui-line-clamp
+                            [content]="file.cc | joinPipe"
+                            [linesLimit]="1"
+                        >
+                        </tui-line-clamp>
+                    </td>
+
+                    <td
+                        *tuiCell="'from'"
+                        class="tui-table__td tui-table__td_align_center"
+                        tuiTd
+                    >
+                        <tui-line-clamp [content]="file.from | joinPipe" [linesLimit]="1">
+                        </tui-line-clamp>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </tui-scrollbar>
+</tui-loader>

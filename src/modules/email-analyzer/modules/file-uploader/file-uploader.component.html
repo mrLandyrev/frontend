@@ -10,16 +10,16 @@
 
     <tui-files class="tui-space_top-1">
         <tui-file
+            *ngFor="let file of uploadedFiles$ | async"
+            state="normal"
+            [file]="file"
+        ></tui-file>
+
+        <tui-file
             *ngFor="let file of uploadingFiles$ | async"
             state="loading"
             [file]="file"
             [showDelete]="false"
-        ></tui-file>
-
-        <tui-file
-            *ngFor="let file of uploadedFiles$ | async"
-            state="normal"
-            [file]="file"
         ></tui-file>
     </tui-files>
 </div>
